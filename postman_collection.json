@@ -1,0 +1,111 @@
+{
+  "info": {
+    "name": "QA Assignment Collection",
+    "_postman_id": "12345-qa-assignment",
+    "description": "API Testing Collection for Assignment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET Posts",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts",
+          "protocol": "https",
+          "host": ["jsonplaceholder", "typicode", "com"],
+          "path": ["posts"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response time is less than 2s\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "POST Create Post",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"test title\",\n  \"body\": \"test body\",\n  \"userId\": 1\n}"
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts",
+          "protocol": "https",
+          "host": ["jsonplaceholder", "typicode", "com"],
+          "path": ["posts"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Validate title\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.title).to.eql(\"test title\");",
+              "});",
+              "",
+              "pm.test(\"Validate body\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.body).to.eql(\"test body\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "DELETE Post",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts/1",
+          "protocol": "https",
+          "host": ["jsonplaceholder", "typicode", "com"],
+          "path": ["posts", "1"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200 or 204\", function () {",
+              "    pm.expect([200, 204]).to.include(pm.response.code);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
